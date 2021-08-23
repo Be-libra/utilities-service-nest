@@ -12,7 +12,7 @@ export class cronService{
         private readonly redisService:redisExpiredEvent
     ){}
 
-    @Cron('02 58 * * * *')
+    @Cron('02 53 * * * *')
     async handleCron(){
         const getRandomLimit = Math.round((Math.random()*5)+4)
         const campaigns = await this.campaignService.getCampaigns(100,0)

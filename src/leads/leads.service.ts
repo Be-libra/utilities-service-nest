@@ -29,4 +29,16 @@ export class leadService{
     async getLeads(limit:number,campaignId:string): Promise<Lead[]>{
         return (this.leadRepo.find({where:{campaignId,status:Status.initial},take:limit,relations:['campaign']}))
     }
+
+    async updateLeadStatus(status:Status,leadId:string,message?:string):Promise<Lead>{
+        const lead = await this.leadRepo.findOne({where:{id:leadId}})
+        lead.status = status
+        if(message){
+            lead.inviteFailureLatestError=message
+            return await this.leadRepo.save(lead)
+        }
+
+        return await this.leadRepo.save(lead)
+
+    }
 }

@@ -3,6 +3,7 @@ import { redisPubSub } from "./redis.provider";
 import Redis from 'ioredis'
 import axios from "axios";
 import { leadService } from "src/leads/leads.service";
+import { Status } from "src/leads/leads.entity";
 
 @Injectable()
 export class redisExpiredEvent implements OnModuleInit{
@@ -37,12 +38,13 @@ export class redisExpiredEvent implements OnModuleInit{
           
                     if(result.data){
                       console.log(result.data)
+                      await this.leadService.updateLeadStatus(Status.success,data.id)
                     }
           
                   } catch (error) {
                     console.log(error.response.data)
-                    // const result = await queries.updateLeadStatus(data.id,'INVITE_FAILED')
-                    // const response = await queries.updateinviteFailureLatestError(data.id,error.response.data.message)
+                    const result = await this.leadService.updateLeadStatus(Status.failure,data.id,error.response.data.message)
+                    // const response = await this.leadService.updateinviteFailureLatestError(data.id,error.response.data.message)
                   }
                   console.log("TYPE: ", type);
                   console.log("KEY: ", key);

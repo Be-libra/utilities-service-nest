@@ -8,9 +8,11 @@ import { config } from 'ormconfig';
 import { csvModule } from './csv/csv.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { cronModule } from './cron/cron.module';
+import { redisModule } from './redis/redis.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [linkedinModule,TypeOrmModule.forRoot(config),csvModule,ScheduleModule.forRoot(),cronModule],
+  imports: [linkedinModule,TypeOrmModule.forRoot(config),csvModule,ScheduleModule.forRoot(),cronModule,redisModule,ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -2,15 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import { campaignService } from "src/campaign/campaign.service";
 import { leadService } from "src/leads/leads.service";
+import { redisExpiredEvent } from "src/redis/redis.service";
 
 @Injectable()
 export class cronService{
     constructor(
         private readonly campaignService : campaignService,
-        private readonly leadService : leadService
+        private readonly leadService : leadService,
+        private readonly redisService:redisExpiredEvent
     ){}
 
-    @Cron('02 24 * * * *')
+    @Cron('02 58 * * * *')
     async handleCron(){
         const getRandomLimit = Math.round((Math.random()*5)+4)
         const campaigns = await this.campaignService.getCampaigns(100,0)
@@ -23,8 +25,11 @@ export class cronService{
             const getLeads = await this.leadService.getLeads(getRandomLimit,campaign.id)
             leads = [...leads,...getLeads]
         }))
-
-        console.log(leads)
+        let count = 0
+        leads.map((lead,i)=>{
+            count=count+70
+            this.redisService.setReminder(lead.id,JSON.stringify(lead),count)
+        })
         
 
 

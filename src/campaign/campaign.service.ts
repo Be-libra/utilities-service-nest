@@ -20,19 +20,8 @@ export class campaignService{
         return from(this.campaignRepo.save(data))
     }
 
-    getCampaignsLead(limit:number) : Observable<any>{
-        return from(this.campaignRepo.find({relations:['leads'],
-        where:{
-            leads:{
-                status:Status.initial,
-            }
-        },
-        take:limit
-    }))
-    }
-
-    getCampaigns(limit:number,offset:number) :Observable<Campaign[]>{
-        return from(this.campaignRepo.find({take:limit,skip:offset}))
+    async getCampaigns(limit:number,offset:number) :Promise<Campaign[]>{
+        return (this.campaignRepo.find({take:limit,skip:offset}))
     }
 
     async getCampaign(campaignId) :Promise<Campaign> {

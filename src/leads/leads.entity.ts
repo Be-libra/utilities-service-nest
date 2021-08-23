@@ -29,6 +29,9 @@ export class Lead {
     @Column({default:null})
     inviteFailureLatestError:string;
 
+    @Column()
+    campaignId:string
+
     @ManyToOne(()=>Campaign,campaign=>campaign.leads)
     campaign:Campaign;
 

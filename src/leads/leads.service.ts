@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { from, Observable } from "rxjs";
 import { Repository } from "typeorm";
-import { Lead } from "./leads.entity";
+import { Lead, Status } from "./leads.entity";
 import {v4 as uuidv4} from 'uuid'
 import { campaignService } from "src/campaign/campaign.service";
 
@@ -24,5 +24,9 @@ export class leadService{
         })
         
         return await this.leadRepo.save(data)
+    }
+
+    async getLeads(limit:number,campaignId:string): Promise<Lead[]>{
+        return (this.leadRepo.find({where:{campaignId,status:Status.initial},take:limit,relations:['campaign']}))
     }
 }
